@@ -1,15 +1,51 @@
 from pathlib import Path
 import PyPDF2
+from datetime import datetime
+import os
 
 class PDF:
+    filepath: Path
+    filename: str
+    filesize: int
+    timestamp: datetime | None
+
     def __init__(self, filepath: Path):
-        self.filepath = filepath
-        self.num_pages = self._get_num_pages()
+        self.filepath: Path = filepath
+
+        # populate metadata
+        self._populate_file_metadata()
+
+        # page count (keeps existing behaviour)
+        self.num_pages: int = self._get_num_pages()
+
+    def _populate_file_metadata(self) -> None:
+        """
+        Fill filename, filesize and timestamp of last modification.
+        """
+        self.filename = self.filepath.name
+        self.filesize = self._get_filesize()
+        self.timestamp = self._get_mtime()
+
+    def _get_filesize(self) -> int:
+        try:
+            return int(self.filepath.stat().st_size)
+        except Exception:
+            return 0
+
+    def _get_mtime(self) -> datetime | None:
+        try:
+            ts = self.filepath.stat().st_mtime
+            return datetime.fromtimestamp(ts)
+        except Exception:
+            return None
 
     def _get_num_pages(self) -> int:
-        with open(self.filepath, "rb") as f:
-            reader = PyPDF2.PdfReader(f)
-            return len(reader.pages)
+        try:
+            with open(self.filepath, "rb") as f:
+                reader = PyPDF2.PdfReader(f)
+                return len(reader.pages)
+        except Exception:
+            return 0
 
     def __repr__(self):
         return f"PDF({self.filepath.name})"
@@ -29,6 +65,8 @@ class PDF:
                 writer.add_page(page)
             with open(self.filepath, "wb") as out_f:
                 writer.write(out_f)
+        # update metadata since file changed
+        self._populate_file_metadata()
     
     def split(self) -> list[Path]:
         """
@@ -55,7 +93,6 @@ class PdfEditor:
     def __init__(self, path: Path):
         self._working_dir = path
         self._pdf_files = []
-
     def create_pdf_list(self):
         self._pdf_files = []
         for file in sorted(self._working_dir.iterdir()):
@@ -95,7 +132,7 @@ class PdfEditor:
         idx = self._find_index(pdf_filename)
         if idx is not None:
             del self._pdf_files[idx]
-        # TODO: also delete from filesystem
+        os.remove(self._working_dir / pdf_filename)
     
     def rotate_file_cw(self, pdf_filename: str):
         idx = self._find_index(pdf_filename)
@@ -120,6 +157,8 @@ class PdfEditor:
         # ToDo: Also delete from filesystem
         del self._pdf_files[idx]
 
+    def select_files(self, filenames: list[str]):
+        self._pdf_files = [pdf for pdf in self._pdf_files if pdf.filepath.name in filenames]
 
 if __name__ == "__main__":
     path = Path.cwd() / "static"
