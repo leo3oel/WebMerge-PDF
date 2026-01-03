@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+from PyPDF2 import PdfWriter, PdfReader
+from flask import url_for
 
 from Pdf import PDF
 
@@ -10,6 +12,7 @@ class PdfEditor:
     def __init__(self, path: Path):
         self._working_dir = path
         self._pdf_files = []
+
     def create_pdf_list(self):
         self._pdf_files = []
         for file in sorted(self._working_dir.iterdir()):
@@ -80,6 +83,25 @@ class PdfEditor:
     def set_urls(self):
         for pdf in self._pdf_files:
             pdf.set_url()
+    
+    def create_merged_pdf(self, output_filepath: Path):
+        writer = PdfWriter()
+        for pdf in self._pdf_files:
+            reader = PdfReader(str(pdf.filepath))
+            for page in reader.pages:
+                writer.add_page(page)
+        with open(output_filepath, "wb") as out_f:
+            writer.write(out_f)
+
+    def create_preview(self) -> str:
+        preview_filepath = self._working_dir / "preview" / "preview.pdf"
+        self.create_merged_pdf(preview_filepath)
+        return url_for('static', filename='preview/preview.pdf')
+
+    def delete_preview(self):
+        preview_filepath = self._working_dir / "preview" / "preview.pdf"
+        if preview_filepath.exists():
+            os.remove(preview_filepath)
 
 if __name__ == "__main__":
     path = Path.cwd() / "static"

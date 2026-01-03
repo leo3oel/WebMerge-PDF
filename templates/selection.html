@@ -8,7 +8,11 @@
     <button type="submit" class="btn btn-submit">Edit Selected</button>
     <div style="max-width:1100px; margin-bottom:12px;">
         {% for file in pdf_files %}
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 8px; border-bottom:1px solid #eee;">
+        <div style="display: flex; align-items: center; 
+{%- if loop.first %}
+    margin-top: 12px; border-top:1px solid #eee; padding-top:8px;
+{% endif -%}
+    margin-bottom: 12px; gap:8px; border-bottom:1px solid #eee; padding-bottom:8px;">
             <div style="display:flex; align-items:center; gap:12px; width:100%;">
                 <div style="flex:0 0 160px;">
                     <iframe src="{{ file.url }}" width="{{ PDFWIDTH }}px" height="{{ PDFHEIGHT }}px" style="border:1px solid #ddd;"></iframe>
@@ -22,14 +26,14 @@
                         <input
                             type="checkbox"
                             name="selected"
-                            value="{file.filename}"
+                            value="{{ file.filename }}"
                             form="selectionForm"
                             class="select-checkbox"
                             onchange="this.parentElement.classList.toggle('selected', this.checked)"
                         >
                         ✔ Select
                         </label>
-                    <button type="button" onclick="deleteFile('{file.filename}')" class="btn btn-delete">🗑️ Delete</button>
+                    <button type="button" onclick="deleteFile('{{ file.filename }}')" class="btn btn-delete">🗑️ Delete</button>
                 </div>
             </div>
         </div>
@@ -57,4 +61,3 @@
 
 <p>Select the PDFs you want to edit on the next page. Use the delete buttons to remove files directly. If no PDFs are
     selected, all will be shown.</p>
-""")

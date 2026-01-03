@@ -1,0 +1,85 @@
+<!doctype html>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<title>Merge and Save File</title>
+
+<h1>Merge and Save File</h1>
+
+<div style="display:flex; gap:20px; margin-top:18px; align-items:flex-start;">
+    <!-- Large preview -->
+    <div style="flex:0 0 720px;">
+        <div style="padding-top:12px; border-top:1px solid #eee;
+                margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #eee;">
+            <iframe src="{{ preview_url }}" width="{{ PDFWIDTH }}px" height="{{ PDFHEIGHT }}px"
+                style="border:1px solid #ccc; border-radius:4px; display:block;"></iframe>
+        </div>
+    </div>
+
+    <!-- Save options -->
+    <div style="min-width:300px; display:flex; flex-direction:column; gap:18px;">
+        <div style="padding:16px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
+            <h3 style="margin:0 0 12px 0;">Save Options</h3>
+
+            <form method="post" action="/save" style="display:flex; flex-direction:column; gap:14px;">
+                <div>
+                    <label for="savepath" style="display:block; margin-bottom:8px; font-weight:500;">Save
+                        Location</label>
+                    <select id="savepath" name="savepath" required
+                        style="width:100%; padding:8px 12px; border:1px solid #bcbcbc; border-radius:6px; background:#fff;">
+                        <option value="">Select a save location...</option>
+                        {% for path in save_paths %}
+                        <option value="{{ path }}">{{ path }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display:block; margin-bottom:8px; font-weight:500;">Filename</label>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <span id="filepath-prefix" style="flex:1; padding:8px 12px; border:1px solid #bcbcbc; border-radius:6px; font-size:0.8em; display:flex; align-items:center; height:38px; box-sizing:border-box;">
+                            not-selected_
+                        </span>
+                        <input id="filename" name="filename" type="text" value="{{ filename }}"
+                            style="flex:1; padding:8px 12px; border:1px solid #bcbcbc; border-radius:6px; font-size:0.8em; height:38px; box-sizing:border-box;">
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <button type="submit" name="action" value="save" class="btn btn-submit" style="flex:1;">💾 Save
+                        PDF</button>
+                    </form>
+                    <form method="post">
+                    <button name="action" value="back" class="btn btn-back">← Go back to Edit</button>
+                    </form>
+                </div>
+        </div>
+
+        <div style="padding:14px; background:#f0f7ff; border-radius:6px; border:1px solid #d0e7ff;">
+            <h4 style="margin:0 0 8px 0; color:#003a8c;">Files to Merge</h4>
+            <div style="color:#666; font-size:0.95em;">
+                <ol style="margin:8px 0 0 20px; padding-left:1em;">
+                    {% for file in pdf_files %}
+                    <li>{{ file.filename }}</li>
+                    {% endfor %}
+                </ol>
+                <div style="margin-top:12px; font-weight:500;">Total: {{ pdf_files|length }} file(s)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p style="margin-top:10px; color:#666; font-size:0.9em;">ℹ️ Preview is generated from the merged PDF file
+    (create/refresh preview after merging).</p>
+
+<script>
+document.getElementById('savepath').addEventListener('change', function() {
+    const selectedValue = this.value;
+    const prefixSpan = document.getElementById('filepath-prefix');
+    const filenameInput = document.getElementById('filename');
+    
+    if (selectedValue) {
+        // Extract the path name (before " -- " separator)
+        const pathName = selectedValue.split(' -- ')[0];
+        prefixSpan.textContent = pathName + '_';
+    }
+});
+</script>

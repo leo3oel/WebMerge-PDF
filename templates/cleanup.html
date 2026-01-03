@@ -1,0 +1,72 @@
+<!doctype html>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<title>Cleanup PDF Files</title>
+
+<h1>Cleanup PDF Files</h1>
+
+<form method="post" style="display:flex; flex-direction:column; gap:6px; margin-left:12px; width:fit-content;">
+    <button type="button" onclick="deleteAllFiles()" class="btn btn-delete" style="width:200px;">🗑️ Delete All Files</button>
+    <button name="action" value="back" class="btn btn-back">← Go Back to Selection</button>
+</form>
+
+{% if pdf_files %}
+<div style="margin-top:20px; padding:16px; background:#fff3cd; border-radius:6px; border:1px solid #ffe69c; margin-left:12px; margin-right:12px; max-width:500px;">
+    <div style="color:#856404; font-weight:500;">⚠️ Total Files: {{ pdf_files|length }}</div>
+    <div style="color:#856404; font-size:0.9em; margin-top:4px;">These files will be permanently deleted.</div>
+</div>
+{% endif %}
+
+{% for file in pdf_files %}
+<div style="display: flex; align-items: center; 
+{%- if loop.first %}
+    margin-top: 12px; border-top:1px solid #eee; padding-top:8px;
+{% endif -%}
+    margin-bottom: 12px; gap:8px; border-bottom:1px solid #eee; padding-bottom:8px; margin-left:12px; margin-right:12px;">
+    <div style="flex:0 0 360px;">
+        <iframe src="{{ file.url }}" width="{{ PDFWIDTH }}px" height="{{ PDFHEIGHT }}px"
+            style="border:1px solid #ccc;"></iframe>
+    </div>
+    <div style="flex:0 1 auto; display:flex; flex-direction:column; gap:6px; padding-left:12px;">
+        <div style="font-weight:600;">{{ file.filename }}</div>
+        <div style="color:#666;">Size: {{ file.filesize_str }} · Modified: {{ file.timestamp_str }} · Pages: {{
+            file.num_pages }}</div>
+    </div>
+    <form method="post" style="display: flex; flex-direction: column; gap:6px; margin-left:12px; padding-left:50px">
+        <input type="hidden" name="filename" value="{{ file.filename }}">
+        <button type="button" onclick="deleteFile('{{ file.filename }}')" class="btn btn-delete">🗑️ Delete</button>
+    </form>
+</div>
+{%- endfor %}
+
+{% if not pdf_files %}
+<div style="margin-top:20px; padding:16px; background:#d4edda; border-radius:6px; border:1px solid #c3e6cb; margin-left:12px; max-width:500px;">
+    <div style="color:#155724; font-weight:500;">✓ No PDF files found</div>
+    <div style="color:#155724; font-size:0.9em; margin-top:4px;">Your PDF folder is clean.</div>
+</div>
+{% endif %}
+
+<form method="post" style="display:flex; flex-direction:column; gap:6px; margin-left:12px; margin-top:20px; width:fit-content;">
+    <button name="action" value="back" class="btn btn-back">← Go Back to Selection</button>
+</form>
+
+<!-- hidden delete form (POST) to avoid nested forms; JS will populate and submit it -->
+<form id="deleteForm" method="post" style="display:none;">
+    <input type="hidden" name="action" value="delete">
+    <input type="hidden" name="filename" id="deleteFilename" value="">
+</form>
+
+<script>
+    function deleteFile(filename) {
+        if (!confirm("Delete '" + filename + "'? This will remove the file from disk.")) return;
+        const f = document.getElementById('deleteFilename');
+        f.value = filename;
+        document.getElementById('deleteForm').submit();
+    }
+
+    function deleteAllFiles() {
+        if (!confirm("Delete ALL PDF files? This action cannot be undone.")) return;
+        const f = document.getElementById('deleteFilename');
+        f.value = "ALL";
+        document.getElementById('deleteForm').submit();
+    }
+</script>
