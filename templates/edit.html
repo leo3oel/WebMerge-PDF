@@ -1,0 +1,41 @@
+<!doctype html>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<title>Edit PDF Files</title>
+<h1>Edit PDF Files</h1>
+
+    {% for file in pdf_files %}
+    <div style="display: flex; align-items: center; margin-bottom: 12px; gap:8px; border-bottom:1px solid #eee; padding-bottom:8px;">
+        <div style="flex:0 0 360px;">
+            <iframe src="{{ file.url }}" width="{{ PDFWIDTH }}px" height="{{ PDFHEIGHT }}px"
+                style="border:1px solid #ccc;"></iframe>
+        </div>
+        <div style="flex:0 1 auto; display:flex; flex-direction:column; gap:6px; padding-left:12px;">
+            <div style="font-weight:600;">{{ file.filename }}</div>
+            <div style="color:#666;">Size: {{ file.filesize_str }} · Modified: {{ file.timestamp_str }} · Pages: {{ file.num_pages }}</div>
+        </div>
+        <form method="post"
+            style="display: flex; flex-direction: column; gap:6px;  margin-left:12px; padding-left:50px">
+            <input type="hidden" name="filename" value="{{ file.filename }}">
+            {%- if loop.first %}
+            <button name="action" disabled value="up" class="btn">⬆️ Move Up</button>
+            {% else %}
+            <button name="action" value="up" class="btn">⬆️ Move Up</button>
+            {% endif -%}
+            {%- if loop.last %}
+            <button class="btn" disabled style="padding:6px 10px;">⬇️ Move Down</button>
+            {% else %} 
+            <button name="action" value="down" class="btn">⬇️ Move Down</button>
+            {% endif -%}
+            <button name="action" value="delete" class="btn btn-delete">🗑️ Delete</button>
+            <button name="action" value="rotate_cw" class="btn">⟳ Rotate CW</button>
+            <button name="action" value="rotate_ccw" class="btn">⟲ Rotate CCW</button>
+            {%- if file.num_pages > 1 %}
+            <button name="action" value="split_pdf" class="btn">✂️ Split PDF</button>
+            {% else %}
+            <button class="btn" disabled style="padding:6px 10px;">✂️ Split PDF</button>
+            {% endif -%}
+        </form>
+    </div>
+    {%- endfor %}
+
+    <p><a href="/">Zurück zur Auswahl</a></p>

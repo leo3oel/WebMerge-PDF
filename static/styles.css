@@ -1,3 +1,85 @@
+/* Base body font */
+body {
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  color: #222;
+  line-height: 1.6;
+  background: #ffffff;
+  padding: 0;
+}
+
+/* Headings */
+h1, .h1 {
+  font-size: 2rem; /* 32px */
+  font-weight: 700;
+  margin-bottom: 0.5em;
+  color: #111;
+}
+
+h2, .h2 {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 600;
+  margin-bottom: 0.5em;
+  color: #111;
+}
+
+h3, .h3 {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 600;
+  margin-bottom: 0.5em;
+  color: #222;
+}
+
+h4, .h4 {
+  font-size: 1rem; /* 16px */
+  font-weight: 600;
+  margin-bottom: 0.5em;
+  color: #333;
+}
+
+/* Paragraphs */
+p, .body-text {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 1em;
+}
+
+/* Small text / captions */
+small, .small-text {
+  font-size: 0.875rem; /* 14px */
+  color: #666;
+}
+
+/* Labels / Form text */
+label, .form-label {
+  font-size: 0.95rem; /* 15px */
+  font-weight: 500;
+  color: #222;
+}
+
+/* Links */
+a {
+  color: #1677ff;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: #0958d9;
+}
+
+/* Utility classes for spacing */
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.mb-4 { margin-bottom: 1rem; }
+
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+
+
 /* Primary action button */
 .btn {
   padding: 6px 12px;

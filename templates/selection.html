@@ -1,0 +1,60 @@
+<!doctype html>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<title>Select PDF Files</title>
+<h1>Select PDF Files</h1>
+
+<!-- selection form (GET) sends selected filenames to /pdf-editor as ?selected=... -->
+<form id="selectionForm" action="/pdf-editor" method="get" style="margin-bottom:20px;">
+    <button type="submit" class="btn btn-submit">Edit Selected</button>
+    <div style="max-width:1100px; margin-bottom:12px;">
+        {% for file in pdf_files %}
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 8px; border-bottom:1px solid #eee;">
+            <div style="display:flex; align-items:center; gap:12px; width:100%;">
+                <div style="flex:0 0 160px;">
+                    <iframe src="{{ file.url }}" width="{{ PDFWIDTH }}px" height="{{ PDFHEIGHT }}px" style="border:1px solid #ddd;"></iframe>
+                </div>
+                <div style="flex:1; display:flex; flex-direction:column; gap:6px; padding-left:12px;">
+                    <div style="font-weight:600;"><a href="{{ file.url }}" target="_blank" style="text-decoration:none; color:inherit;">{{ file.filename }}</a></div>
+                    <div style="color:#666; font-size:0.9em;">Size: {{ file.filesize_str }} · Modified: {{ file.timestamp_str }}</div>
+                </div>
+                <div style="width:180px; display:flex; flex-direction:column; gap:8px; margin-left:12px;">
+                    <label class="btn btn-select">
+                        <input
+                            type="checkbox"
+                            name="selected"
+                            value="{file.filename}"
+                            form="selectionForm"
+                            class="select-checkbox"
+                            onchange="this.parentElement.classList.toggle('selected', this.checked)"
+                        >
+                        ✔ Select
+                        </label>
+                    <button type="button" onclick="deleteFile('{file.filename}')" class="btn btn-delete">🗑️ Delete</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-submit">Edit Selected</button>
+</form>
+
+<!-- hidden delete form (POST) to avoid nested forms; JS will populate and submit it -->
+<form id="deleteForm" method="post" style="display:none;">
+    <input type="hidden" name="action" value="delete">
+    <input type="hidden" name="filename" id="deleteFilename" value="">
+</form>
+
+<script>
+    function deleteFile(filename) {
+        {
+            if (!confirm("Delete '" + filename + "'? This will remove the file from disk.")) return;
+            const f = document.getElementById('deleteFilename');
+            f.value = filename;
+            document.getElementById('deleteForm').submit();
+        }
+    }
+</script>
+
+<p>Select the PDFs you want to edit on the next page. Use the delete buttons to remove files directly. If no PDFs are
+    selected, all will be shown.</p>
+""")
