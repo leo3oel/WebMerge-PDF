@@ -5,7 +5,7 @@
 
 <!-- selection form (GET) sends selected filenames to /pdf-editor as ?selected=... -->
 <form id="selectionForm" action="/pdf-editor" method="get" style="margin-bottom:20px;">
-    <button type="submit" class="btn btn-submit">Edit Selected</button>
+    <button type="submit" class="btn btn-submit">Edit Selected</button> (Will edit all if none selected)
     <div style="max-width:1100px; margin-bottom:12px;">
         {% for file in pdf_files %}
         <div style="display: flex; align-items: center; 
@@ -26,14 +26,14 @@
                         <input
                             type="checkbox"
                             name="selected"
-                            value="{{ file.filename }}"
+                            value="{{ file.static_path }}"
                             form="selectionForm"
                             class="select-checkbox"
                             onchange="this.parentElement.classList.toggle('selected', this.checked)"
                         >
                         ✔ Select
                         </label>
-                    <button type="button" onclick="deleteFile('{{ file.filename }}')" class="btn btn-delete">🗑️ Delete</button>
+                    <button type="button" onclick="deleteFile('{{ file.static_path }}')" class="btn btn-delete">🗑️ Delete</button>
                 </div>
             </div>
         </div>

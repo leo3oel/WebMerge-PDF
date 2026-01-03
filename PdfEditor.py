@@ -54,6 +54,11 @@ class PdfEditor:
             del self._pdf_files[idx]
         os.remove(self._working_dir / pdf_filename)
     
+    def delete_all_files(self):
+        for pdf in self._pdf_files:
+            os.remove(pdf.filepath)
+        self._pdf_files = []
+    
     def rotate_file_cw(self, pdf_filename: str):
         idx = self._find_index(pdf_filename)
         if idx is not None:
@@ -78,7 +83,7 @@ class PdfEditor:
         del self._pdf_files[idx]
 
     def select_files(self, filenames: list[str]):
-        self._pdf_files = [pdf for pdf in self._pdf_files if pdf.filepath.name in filenames]
+        self._pdf_files = [pdf for pdf in self._pdf_files if pdf.static_path in filenames]
 
     def set_urls(self):
         for pdf in self._pdf_files:
@@ -94,12 +99,12 @@ class PdfEditor:
             writer.write(out_f)
 
     def create_preview(self) -> str:
-        preview_filepath = self._working_dir / "preview" / "preview.pdf"
+        preview_filepath = Path.cwd() / "static" / "preview" / "preview.pdf"
         self.create_merged_pdf(preview_filepath)
         return url_for('static', filename='preview/preview.pdf')
 
     def delete_preview(self):
-        preview_filepath = self._working_dir / "preview" / "preview.pdf"
+        preview_filepath = Path.cwd() / "static" / "preview" / "preview.pdf"
         if preview_filepath.exists():
             os.remove(preview_filepath)
 

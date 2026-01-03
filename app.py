@@ -12,7 +12,7 @@ PDFWIDTH = 350
 
 config = Config()
 app = Flask(__name__)
-pdf_editor = PdfEditor(Path.cwd() / "static")
+pdf_editor = PdfEditor(Path.cwd() / "static" / "input")
 # initialize file list once on startup so moves persist in-memory across requests
 pdf_editor.create_pdf_list()
 
@@ -88,7 +88,7 @@ def save():
             return redirect('/pdf-editor')  # go back to edit page
         if action == 'save' and save_path and filename:
             filename = save_path.split(" -- ")[0] + "_" + filename
-            pdf_editor.create_merged_pdf(Path.cwd() / "static" / "output" / filename)
+            pdf_editor.create_merged_pdf(Path.cwd() / "output" / filename)
             pdf_editor.delete_preview()
             return redirect('/cleanup')  # go to cleanup page
         return redirect(url_for('/save'))  # reload page
@@ -118,8 +118,7 @@ def cleanup():
         if action == 'delete':
             if filename == "ALL":
                 # Delete all files
-                for file in pdf_editor.get_pdf_files():
-                    pdf_editor.delete_file(file.filename)
+                pdf_editor.delete_all_files()
             elif filename:
                 pdf_editor.delete_file(filename)
         elif action == 'back':

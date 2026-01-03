@@ -5,6 +5,7 @@ from flask import url_for
 
 class PDF:
     filepath: Path
+    static_path: Path
     filename: str
     filesize: int
     filesize_str: str | None = None
@@ -14,7 +15,8 @@ class PDF:
     num_pages: int = 0
 
     def __init__(self, filepath: Path):
-        self.filepath: Path = filepath
+        self.filepath = filepath
+        self.static_path = f'input/{filepath.name}'  # relative to static folder
 
         # populate metadata
         self._populate_file_metadata()
@@ -26,14 +28,14 @@ class PDF:
         """
         Fill filename, filesize and timestamp of last modification.
         """
-        self.filename = self.filepath.name
+        self.filename = self.filepath.name  # ensure Path object
         self.filesize = self._get_filesize()
         self.timestamp = self._get_mtime()
         self.timestamp_str = self.timestamp.strftime("%H:%M:%S %d.%m.%Y") if self.timestamp else "unknown"
         self.filesize_str = self.human_readable_size(self.filesize)
 
     def set_url(self):
-        self.url = url_for('static', filename=self.filename)
+        self.url = url_for('static', filename=self.static_path)
     
     def _get_filesize(self) -> int:
         try:
