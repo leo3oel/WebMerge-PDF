@@ -170,3 +170,55 @@ a:hover {
   outline-offset: 2px;
 }
 
+/* Page layout */
+.container {
+  max-width: 980px;
+  margin: 28px auto;
+  padding: 18px;
+}
+
+.page-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+.header-actions { display:flex; gap:8px; align-items:center; }
+
+.card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 6px 18px rgba(18,24,40,0.04);
+}
+
+/* table style for save paths */
+.sp-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.sp-table thead th {
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  border-bottom: 1px solid #eee;
+}
+.sp-table tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #fafafa;
+  vertical-align: middle;
+}
+.sp-table tbody tr:hover { background: #fbfbff; }
+
+.muted { color: #777; }
+.flashes { list-style:none; padding:0; margin:6px 0 12px 0; }
+.flashes li { padding:8px 10px; border-radius:6px; margin-bottom:6px; }
+.flashes .success { background:#e6f7e6; color:#0b5f0b; border:1px solid #c9f0c9 }
+.flashes .error { background:#ffecec; color:#8a1f1f; border:1px solid #ffd9d9 }
+.flashes .info { background:#eef6ff; color:#0c3d79; border:1px solid #d6eaff }
+
+.sp-form label { display:block; margin-top:8px; margin-bottom:6px; }
+.sp-form input { width:100%; padding:8px 10px; border-radius:8px; border:1px solid #ddd; box-sizing:border-box }
+.form-actions { margin-top:12px; display:flex; gap:8px }
+

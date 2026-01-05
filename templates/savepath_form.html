@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Save Path{% endblock %}
+{% block content %}
+<h1>{{ action }} Save Path</h1>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for category, msg in messages %}
+        <li class="{{ category }}">{{ msg }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form method="post" class="sp-form">
+  <label for="name">Name</label>
+  <input id="name" name="name" value="{{ savepath.name if savepath }}" required>
+
+  <label for="description">Description</label>
+  <input id="description" name="description" value="{{ savepath.description if savepath }}">
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-submit">{{ action }}</button>
+    <button type="button" class="btn btn-back" onclick="window.location='/savepaths'">Cancel</button>
+  </div>
+</form>
+
+{% endblock %}

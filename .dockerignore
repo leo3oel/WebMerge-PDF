@@ -1,0 +1,9 @@
+__pycache__/*
+todo.md
+.pytest_cache/*
+.venv/
+static/input/*
+static/preview/*
+output/*
+.git/
+.gitignore

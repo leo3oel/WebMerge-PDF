@@ -17,8 +17,12 @@
     <!-- Save options -->
     <div style="min-width:300px; display:flex; flex-direction:column; gap:18px;">
         <div style="padding:16px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
-            <h3 style="margin:0 0 12px 0;">Save Options</h3>
-
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
+                <h3 style="margin:0;">Save Options</h3>
+                <form method="post" style="margin:0;">
+                    <button name="action" value="manage" class="btn">⚙️ Edit Locations</button>
+                </form>
+            </div>
             <form method="post" action="/save" style="display:flex; flex-direction:column; gap:14px;">
                 <div>
                     <label for="savepath" style="display:block; margin-bottom:8px; font-weight:500;">Save
@@ -43,7 +47,7 @@
                     </div>
                 </div>
 
-                <div style="display:flex; gap:12px; align-items:center;">
+                <div style="display:flex; gap:12px; margin-top:6px; align-items:center;">
                     <button type="submit" name="action" value="save" class="btn btn-submit" style="flex:1;">💾 Save
                         PDF</button>
                     </form>
