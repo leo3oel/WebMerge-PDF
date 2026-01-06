@@ -28,6 +28,8 @@ def home():
         filename = request.form.get('filename')
         if action == 'delete' and filename:
             pdf_editor.delete_file(filename)
+        if action == 'refresh':
+            pdf_editor.create_pdf_list()
         return redirect('/')
 
     # build list with checkboxes and per-item delete buttons (delete via JS to avoid nested forms)
@@ -198,4 +200,4 @@ def cleanup():
     )
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

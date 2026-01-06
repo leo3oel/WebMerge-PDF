@@ -5,7 +5,11 @@
 
 <!-- selection form (GET) sends selected filenames to /pdf-editor as ?selected=... -->
 <form id="selectionForm" action="/pdf-editor" method="get" style="margin-bottom:20px;">
-    <button type="submit" class="btn btn-submit">Edit Selected</button> (Will edit all if none selected)
+    <!-- Top buttons container -->
+    <div style="display:flex; gap:12px; margin-bottom:12px;">
+        <button type="submit" class="btn btn-submit">Edit Selected</button> 
+        <button type="button" class="btn btn-submit" onclick="refreshFiles()">Refresh</button>
+    </div>
     <div style="max-width:1100px; margin-bottom:12px;">
         {% for file in pdf_files %}
         <div style="display: flex; align-items: center; 
@@ -39,7 +43,11 @@
         </div>
         {% endfor %}
     </div>
-    <button type="submit" class="btn btn-submit">Edit Selected</button>
+    <!-- Bottom buttons container -->
+    <div style="display:flex; gap:12px;">
+        <button type="submit" class="btn btn-submit">Edit Selected</button>
+        <button type="button" class="btn btn-submit" onclick="refreshFiles()">Refresh</button>
+    </div>
 </form>
 
 <!-- hidden delete form (POST) to avoid nested forms; JS will populate and submit it -->
@@ -48,14 +56,21 @@
     <input type="hidden" name="filename" id="deleteFilename" value="">
 </form>
 
+<!-- hidden refresh form (POST) -->
+<form id="refreshForm" method="post" style="display:none;">
+    <input type="hidden" name="action" value="refresh">
+</form>
+
 <script>
     function deleteFile(filename) {
-        {
-            if (!confirm("Delete '" + filename + "'? This will remove the file from disk.")) return;
-            const f = document.getElementById('deleteFilename');
-            f.value = filename;
-            document.getElementById('deleteForm').submit();
-        }
+        if (!confirm("Delete '" + filename + "'? This will remove the file from disk.")) return;
+        const f = document.getElementById('deleteFilename');
+        f.value = filename;
+        document.getElementById('deleteForm').submit();
+    }
+
+    function refreshFiles() {
+        document.getElementById('refreshForm').submit();
     }
 </script>
 
