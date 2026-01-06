@@ -9,6 +9,9 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - SECRET_KEY=your-generated-value
+    volumes:
+      - ./app/static/input:/app/static/input
+      - ./app/output:/app/output
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/", "||", "exit", "1"]

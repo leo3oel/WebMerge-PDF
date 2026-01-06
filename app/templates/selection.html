@@ -1,6 +1,6 @@
 <!doctype html>
 <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-<title>Select PDF Files</title>
+<title>Merge PDF Files</title>
 <h1>Select PDF Files</h1>
 
 <!-- selection form (GET) sends selected filenames to /pdf-editor as ?selected=... -->
@@ -26,14 +26,14 @@
                         <input
                             type="checkbox"
                             name="selected"
-                            value="{{ file.static_path }}"
+                            value="{{ file.filename }}"
                             form="selectionForm"
                             class="select-checkbox"
                             onchange="this.parentElement.classList.toggle('selected', this.checked)"
                         >
                         ✔ Select
                         </label>
-                    <button type="button" onclick="deleteFile('{{ file.static_path }}')" class="btn btn-delete">🗑️ Delete</button>
+                    <button type="button" onclick="deleteFile('{{ file.filename }}')" class="btn btn-delete">🗑️ Delete</button>
                 </div>
             </div>
         </div>

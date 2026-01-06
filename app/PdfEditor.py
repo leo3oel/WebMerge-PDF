@@ -83,7 +83,7 @@ class PdfEditor:
         del self._pdf_files[idx]
 
     def select_files(self, filenames: list[str]):
-        self._pdf_files = [pdf for pdf in self._pdf_files if pdf.static_path in filenames]
+        self._pdf_files = [pdf for pdf in self._pdf_files if pdf.filename in filenames]
 
     def set_urls(self):
         for pdf in self._pdf_files:
@@ -91,20 +91,24 @@ class PdfEditor:
     
     def create_merged_pdf(self, output_filepath: Path):
         writer = PdfWriter()
-        for pdf in self._pdf_files:
-            reader = PdfReader(str(pdf.filepath))
-            for page in reader.pages:
-                writer.add_page(page)
-        with open(output_filepath, "wb") as out_f:
-            writer.write(out_f)
+        if len(self._pdf_files) > 0:
+            for pdf in self._pdf_files:
+                reader = PdfReader(str(pdf.filepath))
+                for page in reader.pages:
+                    writer.add_page(page)
+            with open(output_filepath, "wb") as out_f:
+                writer.write(out_f)
 
     def create_preview(self) -> str:
-        preview_filepath = Path.cwd() / "static" / "preview" / "preview.pdf"
+        preview_folder = Path.cwd() / "static" / "data" / "preview"
+        if not preview_folder.exists():
+            preview_folder.mkdir(parents=True, exist_ok=True)
+        preview_filepath = preview_folder / "preview.pdf"
         self.create_merged_pdf(preview_filepath)
-        return url_for('static', filename='preview/preview.pdf')
+        return url_for('static', filename='data/preview/preview.pdf')
 
     def delete_preview(self):
-        preview_filepath = Path.cwd() / "static" / "preview" / "preview.pdf"
+        preview_filepath = Path.cwd() / "static" / "data" / "preview" / "preview.pdf"
         if preview_filepath.exists():
             os.remove(preview_filepath)
 

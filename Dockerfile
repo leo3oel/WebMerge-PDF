@@ -1,11 +1,19 @@
-FROM python:3.13.6-slim-bookworm
+FROM python:3.13-slim-bookworm
+
+# Prevent Python from buffering logs
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY requirements.txt .
+# Install dependencies first (better caching)
+COPY app/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt gunicorn
 
-COPY . .
+# Copy application source
+COPY app/ ./
+
+# Ensure static subdirs exist (they will be overmounted by volumes)
+RUN mkdir -p static/input static/output
 
 EXPOSE 8000
 

@@ -2,8 +2,8 @@ __pycache__/*
 todo.md
 .pytest_cache/*
 .venv/
-static/input/*
-static/preview/*
-output/*
+app/static/input/*
+app/static/data/*
+app/static/output/*
 .git/
 .gitignore

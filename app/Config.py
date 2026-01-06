@@ -19,7 +19,7 @@ class Config:
     """
 
     def __init__(self, db_path: str | None = None):
-        self.db_path = Path(db_path) if db_path else Path.cwd() / "savepaths.db"
+        self.db_path = Path(db_path) if db_path else Path.cwd() / "static" / "data" / "savepaths.db"
         self._init_db()
 
     def _get_conn(self):
